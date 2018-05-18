@@ -114,7 +114,6 @@ namespace EducationalPratice_Task_10
             //Заполнение 1 матрицы 
 
             #endregion
-
             Console.WriteLine("Выходная матрица ");
             PrintMatrix(temp);
         }
