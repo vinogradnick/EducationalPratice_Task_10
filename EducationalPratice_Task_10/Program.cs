@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,12 +9,12 @@ namespace EducationalPratice_Task_10
 {
     class  Program
     {
-       public static Random random =new Random();
         public static void Main(string[] args)
         {
             Graph graph = new Graph(10);
             graph.Generate();
             graph.Show();
+            Console.ReadKey();
         }
     }
 
@@ -22,10 +23,9 @@ namespace EducationalPratice_Task_10
         private List<Point> _Graph;
         private Point Head;
 
-
+        static Random _rd = new Random();
         public Graph(int peaks)
         {
-
             _Graph = new List<Point>(peaks);
             Head = new Point(1);
         }
@@ -34,8 +34,16 @@ namespace EducationalPratice_Task_10
         {
             for (int i = 0; i < _Graph.Capacity; i++)
             {
-                Point node = new Point(Program.random.Next(_Graph.Capacity));
-                _Graph[i] = node;
+                Point node = new Point(_rd.Next(_Graph.Capacity));
+                _Graph.Add(node);
+            }
+
+            for (int i = 0; i < _Graph.Count; i++)
+            {
+                Point[] points = new Point[_rd.Next(2,_Graph.Count)];
+                for (int j = 0; j < points.Length; j++)
+                    points[j] = _Graph[_rd.Next(_Graph.Count)];
+                _Graph[i].AddRoute(points);
             }
 
         }
@@ -46,12 +54,12 @@ namespace EducationalPratice_Task_10
         }
         class Point
         {
-            public int Data;
+            public int Data { get; set; }
             public List<Point> Routes =new List<Point>();
 
             public Point(int Data) => this.Data = Data;
 
-            public Point() => this.Data = Program.random.Next(10);
+            public Point() => this.Data = _rd.Next(10);
 
             public Point(int Data, params Point[] routes)
             {
@@ -72,7 +80,7 @@ namespace EducationalPratice_Task_10
             public override string ToString()
             {
                 string routes = "";
-                string info = this.Data.ToString();
+                string info = $"Вершина :{this.Data.ToString()} Ребра";
                 for (int i = 0; i < this.Routes.Count; i++)
                     routes += $"({Routes[i].Data.ToString()})-";
                 return info + routes;
